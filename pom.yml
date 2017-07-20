@@ -1,0 +1,108 @@
+modelVersion: 4.0.0
+groupId:      nz.co.aetheric
+artifactId:   proscription
+version:      0.0.1-SNAPSHOT
+
+name:        Proscription
+description: A desired-state-configuration api for jvm apps.
+
+properties:
+  project.build.sourceEncoding: UTF-8
+
+  # Common version properties.
+  version.kotlin: 1.1.3-2
+  version.dagger: 2.9
+  version.junit:  4.12
+
+  # Common path properties.
+  path.generated: ${project.build.directory}/generated-sources
+
+  kotlin.compiler.incremental:     true
+  kotlin.compiler.jvmTarget:       1.8
+  kotlin.compiler.apiVersion:      1.1
+  kotlin.compiler.languageVersion: 1.1
+
+dependencies:
+
+  - groupId:    org.jetbrains.kotlin
+    artifactId: kotlin-stdlib-jre8
+    version:    ${version.kotlin}
+
+  - groupId:    com.google.dagger
+    artifactId: dagger
+    version:    ${version.dagger}
+
+  - groupId:    junit
+    artifactId: junit
+    version:    ${version.junit}
+    scope:      test
+
+build:
+  sourceDirectory: ${project.basedir}/src/main
+  testSourceDirectory: ${project.basedir}/src/test
+
+  plugins:
+
+    - groupId:    org.apache.maven
+      artifactId: maven-compiler-plugin
+      version:    3.5.1
+      configuration:
+        proc:   none
+        source: 1.8
+        target: 1.8
+      executions:
+        
+        - id:    default-compile
+          phase: none
+
+        - id:    default-testCompile
+          phase: none
+
+        - id:    java-compile
+          phase: none
+
+        - id:    java-test-compile
+          phase: none
+
+    - groupId:    org.jetbrains.kotlin
+      artifactId: kotlin-maven-plugin
+      version:    ${version.kotlin}
+      executions:
+
+        - id:    kapt
+          phase: compile
+          goals: [ kapt ]
+          configuration:
+            sourceDirs: [ '${project.basedir}/src/main' ]
+            annotationProcessorPaths:
+              - groupId:    com.google.dagger
+                artifactId: dagger-compiler
+                version:    ${version.dagger}
+
+        - id:    compile
+          phase: compile
+          goals: [ compile ]
+          configuration:
+            sourceDirs:
+              - ${project.basedir}/src/main
+              - ${path.generated}/kapt/main
+
+        - id:    test-kapt
+          phase: test-compile
+          goals: [ test-kapt ]
+          configuration:
+            sourceDirs: [ '${project.basedir}/src/test' ]
+            annotationProcessorPaths:
+              - groupId:    com.google.dagger
+                artifactId: dagger-compiler
+                version:    ${version.dagger}
+
+        - id:    test-compile
+          phase: test-compile
+          goals: [ test-compile ]
+          configuration:
+            sourceDirs:
+              - ${project.basedir}/src/test
+              - ${path.generated}/kapt/test
+
+
