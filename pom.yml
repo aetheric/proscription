@@ -32,6 +32,10 @@ dependencies:
     artifactId: dagger
     version:    ${version.dagger}
 
+  - groupId:    nz.sodium
+    artifactId: sodium
+    version:    1.1.0
+
   - groupId:    junit
     artifactId: junit
     version:    ${version.junit}
@@ -45,7 +49,6 @@ build:
 
     - groupId:    org.apache.maven
       artifactId: maven-compiler-plugin
-      version:    3.5.1
       configuration:
         proc:   none
         source: 1.8
